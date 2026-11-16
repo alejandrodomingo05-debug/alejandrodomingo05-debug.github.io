@@ -223,6 +223,14 @@ dialog::backdrop{background:rgba(21,23,27,.55);backdrop-filter:blur(4px)}
 .cl span.v{font-weight:500;word-break:break-all}
 footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 
+
+/* back to top */
+.totop{position:fixed;right:22px;bottom:22px;z-index:60;width:52px;height:52px;border-radius:50%;border:1.5px solid var(--ink);background:var(--accent);color:#fff;font-size:22px;cursor:pointer;display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .3s,transform .3s,box-shadow .2s}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.totop:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+@media print{.totop{display:none!important}}
+
 /* reveal */
 .rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
 .rv.in{opacity:1;transform:none}
@@ -555,6 +563,8 @@ footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display
 </section>
 </main>
 
+<button class="totop" id="toTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+
 <dialog id="dlg" aria-labelledby="mdTitle">
   <button class="x" id="dlgX" aria-label="Cerrar">✕</button>
   <div class="md" id="mdBody"></div>
@@ -661,6 +671,7 @@ function setLang(l){
   const i = l==="es"?0:1;
   document.querySelectorAll("[data-t]").forEach(el=>{ const v=T[el.dataset.t]; if(v) el.innerHTML=v[i]; });
   document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===l));
+  toTop.setAttribute("aria-label", l==="es"?"Volver arriba":"Back to top"); toTop.title=toTop.getAttribute("aria-label");
   document.title = l==="es" ? "Alejandro Domingo · Portfolio" : "Alejandro Domingo · Portfolio (EN)";
   try{ localStorage.setItem("ad-lang",l); }catch(e){}
   if(dlg.open) renderProject(cur);
@@ -702,6 +713,11 @@ document.getElementById("printBtn").addEventListener("click",()=>{
   if(framed){ document.getElementById("printNote").hidden=false; }
   try{ window.print(); }catch(e){ document.getElementById("printNote").hidden=false; }
 });
+
+/* back to top button */
+const toTop=document.getElementById("toTop");
+addEventListener("scroll",()=>toTop.classList.toggle("show",scrollY>window.innerHeight*0.8),{passive:true});
+toTop.addEventListener("click",()=>{window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});
 
 /* reveal */
 if("IntersectionObserver" in window){
