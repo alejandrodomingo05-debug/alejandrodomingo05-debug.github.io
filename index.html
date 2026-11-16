@@ -716,7 +716,8 @@ document.getElementById("printBtn").addEventListener("click",()=>{
 
 /* back to top button */
 const toTop=document.getElementById("toTop");
-addEventListener("scroll",()=>toTop.classList.toggle("show",scrollY>window.innerHeight*0.8),{passive:true});
+addEventListener("scroll",()=>toTop.classList.toggle("show",scrollY>120),{passive:true});
+toTop.classList.toggle("show",scrollY>120);
 toTop.addEventListener("click",()=>{window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});
 
 /* reveal */
